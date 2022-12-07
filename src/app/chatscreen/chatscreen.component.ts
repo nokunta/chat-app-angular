@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { PusherMessage } from 'src/entities/pusherMessage';
 import { User } from 'src/entities/user';
 import { environment } from 'src/environments/environment';
+import { ChatService } from '../services/chat.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-chatscreen',
@@ -16,25 +18,28 @@ export class ChatscreenComponent implements OnInit {
   username: string = '';
   messages: PusherMessage[] = [];
   userName: string = '';
-  onlineUsers : User[] = [];
+  onlineUsers: User[] = [];
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    private UserService: UserService,
+    private ChatService: ChatService
+  ) {}
 
   ngOnInit(): void {
-    this.username = 'joao'
-    var pusher = new Pusher('1db25fbeab327a888e94', {
-      cluster: 'eu',
-    });
+    this.username = this.UserService.user.firstname;
 
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', (data: PusherMessage) => {
+    this.ChatService.getChannel().bind('my-event', (data: PusherMessage) => {
+      if (data.username === this.UserService.user.firstname) {
+        data.isSender = true;
+      }
       this.messages.push(data);
     });
   }
 
   submit() {
     this.httpClient
-      .post(`${environment['apiBaseUrl']}/message`, {
+      .post(`${environment.apiBaseUrl}/message`, {
         username: this.username,
         message: this.message,
       })

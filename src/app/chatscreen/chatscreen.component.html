@@ -21,8 +21,8 @@
           mat-line
           [ngClass]="
             message.isSender === true
-              ? 'sender-message-body'
-              : 'receiver-message-body'
+              ? 'message outgoing'
+              : 'message incoming'
           "
         >
           <div class="user-icon">

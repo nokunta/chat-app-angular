@@ -1,0 +1,16 @@
+<div *ngFor="let channel of channels">
+  <mat-card  class="example-card">
+
+    <mat-card-content>
+      {{channel.name}}
+    </mat-card-content>
+    <mat-card-actions>
+      <button [routerLink]="['/chat']" routerLinkActive="router-link-active" >Enter channel</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<button mat-fab color="primary" class="button-right" (click)="createChannel()" aria-label="">
+  <mat-icon>control_point_duplicate</mat-icon>
+</button>
+
